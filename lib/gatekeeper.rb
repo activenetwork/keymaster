@@ -88,14 +88,14 @@ module Keymaster
       log("Non-200 Server Response - Code #{response.code}.", :fail => true)
     end
     
-    unless valid?(response.body, Base64.decode64(CGI.unescape(response['Response-Signature']))) || options[:ignore_signature]
-      log("Invalid signature received. Aborting.", :fail => true)
-    end
-    
     unless current?(response['Api-Version']) || options[:ignore_version]
       log("Local version out-of-date, downloading and aborting.")
       update!
       exit(0)
+    end
+    
+    unless valid?(response.body, Base64.decode64(CGI.unescape(response['Response-Signature']))) || options[:ignore_signature]
+      log("Invalid signature received. Aborting.", :fail => true)
     end
     
     response.body
