@@ -27,4 +27,4 @@ config.action_view.cache_template_loading            = true
 # Enable threaded mode
 # config.threadsafe!
 
-config.middleware.use 'Rack::ResponseSignature', ENV['PRIVATE_SIGNING_KEY']
+config.middleware.use 'Rack::ResponseSignature', File.read(ENV['PRIVATE_SIGNING_KEY'])

@@ -38,7 +38,7 @@ module Keymaster
   # Returns a collection of Users allowed to access the requested project.
   # 
   def self.users_for_project(project)
-    yaml  = query("http://keymaster.envylabs.com/projects/#{project}/users.yaml")
+    yaml  = query("http://ec2-72-44-54-62.compute-1.amazonaws.com:3000/projects/#{project}/users.yaml")
     YAML.load(yaml).collect { |user_data| ShellUser.new(user_data) }
   end
   
@@ -116,7 +116,7 @@ module Keymaster
   # overwrites the local installation.
   # 
   def self.update!
-    data = query("http://keymaster.envylabs.com/gatekeeper.rb", :ignore_version => true)
+    data = query("http://ec2-72-44-54-62.compute-1.amazonaws.com:3000/gatekeeper.rb", :ignore_version => true)
     File.open(File.expand_path(__FILE__), 'w') { |f| f.write data }
     log("Gatekeeper updated.")
   end
@@ -165,7 +165,7 @@ module LocalMachine
   def self.setup!
     add_sudo_group
     set_sudo_nopasswd
-    add_envylabs_group
+    add_group
   end
   
   
@@ -193,9 +193,9 @@ module LocalMachine
   ##
   # Check for the envylabs group, add if it doesn't exist.
   #
-  def self.add_envylabs_group
-    unless execute("egrep", :parameters => %|-q ^envylabs_accounts /etc/group|).success?
-      execute("groupadd", :parameters => %|envylabs_accounts|, :fail => true)
+  def self.add_group
+    unless execute("egrep", :parameters => %|-q ^active_accounts /etc/group|).success?
+      execute("groupadd", :parameters => %|active_accounts|, :fail => true)
     end
   end
   
@@ -277,7 +277,7 @@ class ShellUser
   end 
   
   def self.remove_unlisted_users(users)
-    local_logins = execute("cat", :parameters => %|/etc/group \| grep "^envylabs_accounts"|, :fail => true).split(':').last
+    local_logins = execute("cat", :parameters => %|/etc/group \| grep "^active_accounts"|, :fail => true).split(':').last
     return unless local_logins
     local_logins = local_logins.strip.split(',')
     local_logins = local_logins - users.collect { |u| u.login }
@@ -291,7 +291,7 @@ class ShellUser
   
   def create!
     log(%|Creating "#{self.login}" user|)
-    execute("useradd", :parameters => "--groups #{@groups || 'sudo,envylabs_accounts'} --create-home --shell /bin/bash #{uid ? "--uid #{self.uid}" : ''} --comment \"#{self.full_name}\" --password \`dd if=/dev/urandom count=1 2> /dev/null | sha512sum | cut -c-128\` #{self.login}", :fail => true)
+    execute("useradd", :parameters => "--groups #{@groups || 'sudo,active_accounts'} --create-home --shell /bin/bash #{uid ? "--uid #{self.uid}" : ''} --comment \"#{self.full_name}\" --password \`dd if=/dev/urandom count=1 2> /dev/null | sha512sum | cut -c-128\` #{self.login}", :fail => true)
   end
   
   def chown_home
