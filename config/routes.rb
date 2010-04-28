@@ -7,5 +7,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :users, :only => [:show]
   
   map.gatekeeper 'gatekeeper.rb', :controller => 'gate_keeper', :action => 'index', :format => 'rb'
+
+  map.root :controller => 'home'
   
 end

@@ -1,0 +1,17 @@
+body {
+  font-family: 'Lucida Grande', Tahoma, Helvetica, Arial, sans-serif;
+}
+
+h2 {
+  font-size: 131%;
+}
+table {
+  width: 100%;
+}
+  table tr.even {
+    background-color: #ffffff;
+  }
+  table tr.odd {
+    background-color: #eeeeee;
+  }
+  
