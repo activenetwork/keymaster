@@ -1,0 +1,20 @@
+<tr class="<%= cycle 'even', 'odd' %>">
+  <td><%= user.login %></td>
+  <td><%= user.full_name %></td>
+  <td>
+    <%- if user.projects.any? %>
+      <%- user.projects.collect(&:name)[0..4].each do |project| %>
+        <%= link_to project, '#' %>
+      <%- end %>
+      <%- if user.projects.size > 5 %>
+        <%= link_to "...and #{user.projects.size-5} more", '#' %>
+      <%- end %>
+    <%- else %>
+      <%= link_to '(none)', '#' %>
+    <%- end %>
+  </td>
+  <td><%= user.uid %></td>
+  <td><%= truncate user.public_ssh_key, 30 %></td>
+  <td><%= time_ago_in_words user.created_at %> ago</td>
+  <td><%= link_to 'Delete', '#', :class => 'delete' %></td>
+</tr>

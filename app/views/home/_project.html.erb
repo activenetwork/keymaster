@@ -1,0 +1,7 @@
+<tr class="<%= cycle 'even', 'odd' %>">
+  <td><%= project.name %></td>
+  <td><%= pluralize(project.users.size, 'user') %></td>
+  <td><%= time_ago_in_words project.created_at %> ago</td>
+  <td><%= project.last_check_at ? time_ago_in_words(project.last_check_at) : '<span class="blank">(never)</span>' %></td>
+  <td><%= link_to 'Delete', '#', :class => 'delete' %></td>
+</tr>

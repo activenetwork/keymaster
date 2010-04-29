@@ -5,4 +5,21 @@ class HomeController < ApplicationController
     @users = User.all
   end
 
+  
+  def add_project
+    @project = Project.new(params[:project])
+    unless @project.save
+      render :nothing => true
+    end
+  end
+  
+
+  def add_user
+    @user = User.new(params[:user])
+    unless @user.save
+      render :nothing => true
+    end
+  end
+  
+
 end

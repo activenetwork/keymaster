@@ -1,45 +1,63 @@
 <h2>Projects</h2>
-<table id="projects">
-  <tr>
-    <th>Name</th>
-    <th>Created</th>
-    <th>Last Gatekeeper Check</th>
-  <%- @projects.each do |project| %>
-    <tr class="<%= cycle 'even', 'odd' %>">
-      <td><%= project.name %></td>
-      <td><%= project.created_at %></td>
-      <td><%= project.last_check_at || '<span class="blank">(never)</span>' %></td>
-    </tr>
-  <%- end %>
-</table>
-<%= link_to_function 'Add Project', 'Keymaster.addProject()' %>
-    
+<div id="projects" class="block">
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>User Count</th>
+      <th>Created</th>
+      <th>Last Gatekeeper Check</th>
+      <th>&nbsp;</th>
+    <%- @projects.each do |project| %>
+      <%= render 'project', :project => project %>
+    <%- end %>
+  </table>
+  <%= link_to 'Add Project', '#', :class => 'add' %>
+
+  <div id="add_project" class="new" style="display:none;">
+    <h3>Add Project</h3>
+    <%- remote_form_for(Project.new, :url => { :action => 'add_project' }) do |f| %>
+      <%= f.label :name %>
+      <%= f.text_field :name %>
+      <div class="save">
+        <%= f.submit 'Create Project' %> or <%= link_to 'Cancel', '#', :class => 'cancel' %>
+      </div>
+    <%- end %>
+  </div>
+</div>
+
+
 <h2>Users</h2>
-<table id="users">
-  <tr>
-    <th>Login</th>
-    <th>Full Name</th>
-    <th>Projects</th>
-    <th>UID</th>
-    <th>Public Key</th>
-    <th>Created</th>
-  </tr>
-  <%- @users.each do |user| %>
-    <tr class="<%= cycle 'even', 'odd' %>">
-      <td><%= user.login %></td>
-      <td><%= user.full_name %></td>
-      <td>
-        <%- user.projects.collect(&:name)[0..4].each do |project| %>
-          <%= link_to project, '#' %>
-        <%- end %>
-        <%- if user.projects.size > 5 %>
-          <%= link_to "...and #{user.projects.size-5} more", '#' %>
-        <%- end %>
-      </td>
-      <td><%= user.uid %></td>
-      <td><%= truncate user.public_ssh_key, 30 %></td>
-      <td><%= user.created_at %></td>
+<div id="users" class="block">
+  <table id="users">
+    <tr>
+      <th>Login</th>
+      <th>Full Name</th>
+      <th>Projects</th>
+      <th>UID</th>
+      <th>Public Key</th>
+      <th>Created</th>
+      <th>&nbsp;</th>
     </tr>
-  <%- end %>
-</table>
-<%= link_to_function 'Add User', 'Keymaster.addUser()' %>
+    <%- @users.each do |user| %>
+      <%= render 'user', :user => user %>
+    <%- end %>
+  </table>
+  <%= link_to 'Add User', '#', :class => 'add' %>
+
+  <div id="add_user" class="new" style="display:none;">
+    <h3>Add User</h3>
+    <%- remote_form_for(User.new(:uid => User.next_uid), :url => { :action => 'add_user' }) do |f| %>
+      <%= f.label :login %>
+      <%= f.text_field :login %>
+      <%= f.label :full_name %>
+      <%= f.text_field :full_name %>
+      <%= f.label :uid %>
+      <%= f.text_field :uid %>
+      <%= f.label :public_ssh_key %>
+      <%= f.text_area :public_ssh_key %>
+      <div class="save">
+        <%= f.submit 'Create User' %> or <%= link_to 'Cancel', '#', :class => 'cancel' %>
+      </div>
+    <%- end %>
+  </div>
+</div>

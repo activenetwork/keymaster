@@ -1,0 +1,2 @@
+page << "$('#add_user').slideUp();"
+page << %Q{$('#users table').append("#{render('user', :user => @user).gsub(/"/,"\\\"").gsub(/\n/,'')} ");}

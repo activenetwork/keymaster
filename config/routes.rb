@@ -8,6 +8,8 @@ ActionController::Routing::Routes.draw do |map|
   
   map.gatekeeper 'gatekeeper.rb', :controller => 'gate_keeper', :action => 'index', :format => 'rb'
 
+  map.connect 'home/:action', :controller => 'home'
+
   map.root :controller => 'home'
   
 end

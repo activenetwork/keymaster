@@ -24,6 +24,16 @@ class User < ActiveRecord::Base
   attr_readonly           :login,
                           :uid
   
+  
+  def self.next_uid
+    if highest = self.first(:order => 'uid desc', :limit => 1)
+      return highest.uid + 1
+    else
+      return 5000
+    end
+  end
+  
+  
   def to_param #:nodoc:
     login.parameterize
   end

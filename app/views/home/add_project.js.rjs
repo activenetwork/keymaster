@@ -1,0 +1,2 @@
+page << "$('#add_project').slideUp();"
+page << %Q{$('#projects table').append("#{render('project', :project => @project).gsub(/"/,"\\\"").gsub(/\n/,'')} ");}
